@@ -1,5 +1,7 @@
 // POKEDEX PROJECT
 
+//NOTE: These functions run from bottom to top, as running them happens from top to bottom. Ex. The createPokeCard function is executed in the getPokemonData function which is executed in the getPokemon function which is not executed in another function but is executed in the last line of code.
+
 const pokeContainer = document.querySelector(`#container`);
 // Using the first 150 Pokemon (AKA Objects) in the PokeAPI
 const numOfPokemon = 150;
@@ -25,7 +27,18 @@ async function getPokemonData(id){
   const url = `https://pokeapi.co/api/v2/pokemon/${id}`; // creates the API endpoint
   const pokemonData = await axios.get(url); // makes the API request and sets to a variable
   console.log(pokemonData);
-  console.log(pokemon.data.sprites.front_shiny);
-  console.log(pokemon.data.name);
+  console.log(pokemonData.data.sprites.front_shiny);
+  console.log(pokemonData.data.name);
   createPokeCard(pokemonData); // runs the createPokeCard function with the pokemonData as a parameter (the response from making the API request)
 }
+
+// The getPokemon function loops through all the pokemon IDs and runs/executes the getPokemonData function for each ID
+// NOTE: Using async/await on this function because the code in the getPokemonData function is asynchronous (There is an Axios request in that function)
+async function  getPokemon(){
+  for(i = 1; i <= numOfPokemon; i++){
+    console.log(i);
+    await getPokemonData(i); //running the getPokemonData function with the numofPokemon loop results as a parameter which loops through all 150 of the pokemon and lets the pokemon load in order on the page
+  }
+}
+// Running/Executing the getPokemon function which runs/executes the getPokemonData function each time through the loop
+getPokemon();
